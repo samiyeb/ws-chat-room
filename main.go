@@ -7,7 +7,6 @@ import (
     "fmt"
     "io"
     "net/url"
-    // "strconv"
 )
 
 
@@ -66,13 +65,6 @@ func (server *Server) broadcast(bytes []byte) {
 
 func main() {
     server := newServer()
-    // client := newClient("Sam", 8081)
-
-    // var rwc io.ReadWriteCloser
-    // ws, err := websocket.NewClient(&websocket.Config{Location: server.serverUrl, Origin: client.clientUrl }, rwc )
-    // if err != nil {
-    //     log.Fatal(err)
-    // }
     
     http.Handle("/ws", websocket.Handler(server.handleWS))
     
