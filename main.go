@@ -6,14 +6,22 @@ import (
     "net/http"
     "fmt"
     "io"
+    "net/url"
+    // "strconv"
 )
 
+
 type Server struct {
+    serverUrl *url.URL
     connections map[*websocket.Conn]bool
 }
 
 func newServer() *Server {
-    return &Server{connections: make(map[*websocket.Conn]bool)}
+    newUrl, err := url.Parse("http://localhost:8080/ws")
+    if err != nil {
+        log.Fatal(err)
+    }
+    return &Server{connections: make(map[*websocket.Conn]bool), serverUrl: newUrl}
 }
 
 func (server *Server) handleWS(ws *websocket.Conn){
@@ -54,8 +62,18 @@ func (server *Server) broadcast(bytes []byte) {
 }
 
 
+
+
 func main() {
     server := newServer()
+    // client := newClient("Sam", 8081)
+
+    // var rwc io.ReadWriteCloser
+    // ws, err := websocket.NewClient(&websocket.Config{Location: server.serverUrl, Origin: client.clientUrl }, rwc )
+    // if err != nil {
+    //     log.Fatal(err)
+    // }
+    
     http.Handle("/ws", websocket.Handler(server.handleWS))
     
     log.Println("Starting server on :8080")
